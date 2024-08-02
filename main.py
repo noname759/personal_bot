@@ -18,7 +18,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def voice(update: Update, context: CallbackContext) -> None:
     with open('hello.ogg', 'rb') as voice_file:
-        update.message.reply_voice(voice_file, caption="Голосовое сообщение")
+        update.message.reply_voice(voice_file, caption="")
 
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -26,28 +26,20 @@ def button(update: Update, context: CallbackContext) -> None:
     query.answer()
 
     if choice == '1':
-        talk(query, context)  
+        query.edit_message_text(text='Мой аккаунт @Saw_Cuten')
     elif choice == '2':
-        contact(query, context) 
+        query.edit_message_text(text='+992 935844412 \n Нету второго номера :(')
     elif choice == '3':
         query.edit_message_text(text="Вы выбрали кнопку voice")
         query.message.reply_voice(open('hello.ogg', 'rb'), caption="Голосовое сообщение")
-
-def talk(query, context: CallbackContext) -> None:
-    message = 'Мой аккаунт @Saw_Cuten'
-    query.message.reply_text(message) 
-
-def contact(query, context: CallbackContext) -> None:
-    message = '+992 935844412 \n Нету второго номера :('
-    query.message.reply_text(message) 
 
 def main() -> None:
     updater = Updater(TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('contact', contact))
-    dispatcher.add_handler(CommandHandler('talk', talk))
+    dispatcher.add_handler(CommandHandler('contact', lambda update, context: contact(update.message)))
+    dispatcher.add_handler(CommandHandler('talk', lambda update, context: talk(update.message)))
     dispatcher.add_handler(CommandHandler('voice', voice))
     dispatcher.add_handler(CallbackQueryHandler(button))
 
